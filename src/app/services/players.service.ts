@@ -9,6 +9,7 @@ import {
   getDocs,
   doc,
   updateDoc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { where } from '@firebase/firestore';
 
@@ -50,5 +51,14 @@ export class PlayersService {
     });
   }
 
-  deletePlayer(playerId: string) {}
+  async deletePlayer(playerId: string) {
+    const playerRef = collection(this.firestore, this.PLAYER_COLLECTION);
+    let q = query(playerRef, where('id', '==', playerId));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (document) => {
+      const docRef = doc(this.firestore, this.PLAYER_COLLECTION, document.id);
+      await deleteDoc(docRef);
+    });
+  }
 }

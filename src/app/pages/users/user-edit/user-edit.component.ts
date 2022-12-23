@@ -49,11 +49,20 @@ export class UserEditComponent {
     player.decks.map((deck: Deck) => {
       const deckForm = new FormGroup({
         name: new FormControl(deck.name),
-        cards: new FormControl(deck ? deck.cards : null),
+        cards: new FormControl(deck.cards),
       });
 
       (this.playerForm.get('decks') as FormArray).push(deckForm);
     });
+  }
+
+  createDeck() {
+    (this.playerForm.get('decks') as FormArray).push(
+      new FormGroup({
+        name: new FormControl('', Validators.required),
+        cards: new FormControl(null, Validators.required),
+      })
+    );
   }
 
   updatePlayer() {
