@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { PlayersService } from '../../../services/players.service';
 import { Player } from '../../../shared/models/player.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { debounceTime, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,15 +23,17 @@ export class UserListComponent implements OnInit {
   players$!: Observable<Player[]>;
 
   ngOnInit() {
-    //this.playerService.getPlayers().subscribe(console.log);
+    this.players$ = this.playerService.getPlayers();
 
-    this.playerForm.valueChanges.subscribe((search) => {
-      if (search) {
-        this.players$ = this.playerService.getPlayers(search);
-      } else {
-        this.players$ = this.playerService.getPlayers(search!);
-      }
-    });
+    this.playerForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe((search) => {
+        if (search) {
+          this.players$ = this.playerService.getPlayers(search);
+        } else {
+          this.players$ = this.playerService.getPlayers(search!);
+        }
+      });
   }
 
   editPlayer(player: Player) {
