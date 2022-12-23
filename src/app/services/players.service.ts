@@ -6,6 +6,9 @@ import {
   addDoc,
   query,
   collectionData,
+  getDocs,
+  doc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { where } from '@firebase/firestore';
 
@@ -36,7 +39,16 @@ export class PlayersService {
     return addDoc(playerRef, player);
   }
 
-  editPlayer(player: Player) {}
+  async updatePlayer(player: Player) {
+    const playerRef = collection(this.firestore, this.PLAYER_COLLECTION);
+    let q = query(playerRef, where('id', '==', player.id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (document) => {
+      const docRef = doc(this.firestore, this.PLAYER_COLLECTION, document.id);
+      await updateDoc(docRef, { ...player });
+    });
+  }
 
   deletePlayer(playerId: string) {}
 }

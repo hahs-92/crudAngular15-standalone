@@ -4,7 +4,7 @@ export interface Player {
   decks: Deck[];
 }
 
-interface Deck {
+export interface Deck {
   name: string;
   cards: number;
 }

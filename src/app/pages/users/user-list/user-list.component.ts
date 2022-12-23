@@ -1,12 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { debounceTime, Observable } from 'rxjs';
 
 import { PlayersService } from '../../../services/players.service';
 import { Player } from '../../../shared/models/player.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Observable } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -37,7 +36,7 @@ export class UserListComponent implements OnInit {
   }
 
   editPlayer(player: Player) {
-    this._router.navigateByUrl('users/edit');
+    this._router.navigateByUrl('users/edit', { state: { player } });
   }
 
   deletePlayer(player: Player) {
